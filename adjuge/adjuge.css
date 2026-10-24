@@ -1,0 +1,4 @@
+/* Couleurs « Salle des ventes » d’Adjugé ! par-dessus le style commun. */
+:root{--night:#0E3B2C;--paper:#FBF6EA;--ink:#14261E;--muted:#C9D8CF;--coral:#E5484D;--sun:#E3B04B;--mint:#F2D58A}
+.card a{color:#9A2F33}
+.pill{background:var(--sun)}
