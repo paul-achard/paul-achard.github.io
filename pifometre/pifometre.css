@@ -1,0 +1,4 @@
+/* Couleurs « Mercerie » de Pifomètre par-dessus le style commun. */
+:root{--night:#22395A;--paper:#F3EBDD;--ink:#14171C;--muted:#A9B8CF;--coral:#E0443A;--sun:#F6C83B;--mint:#3FC1B0}
+.card a{color:#A8302A}
+.pill{background:var(--sun)}
