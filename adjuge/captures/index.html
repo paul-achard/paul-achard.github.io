@@ -7,12 +7,15 @@
 .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:16px 0}
 .grid img{width:100%;border-radius:10px;display:block}
 .grid figure{margin:0}.grid figcaption{font-size:13px;opacity:.8;margin-top:4px;text-align:center}
-#save{width:100%;padding:16px;font:inherit;font-weight:800;font-size:18px;border:0;border-radius:14px;background:#E3B04B;color:#10261E;cursor:pointer}
+#save,#save63{width:100%;padding:16px;font:inherit;font-weight:800;font-size:18px;border:0;border-radius:14px;background:#E3B04B;color:#10261E;cursor:pointer}
 #msg{min-height:1.4em;margin-top:8px}
 </style></head>
 <body><main>
-<h1>Captures App Store<br><span>iPhone 6,9" · 1320 × 2868</span></h1>
-<button id="save" type="button">Enregistrer les 6 dans Photos</button>
+<h1>Captures App Store<br><span>Choisis la taille de l’onglet Apple</span></h1>
+<p><strong>Grand écran (6,9")</strong> : 1320 × 2868. <strong>Écran moyen (6,3")</strong> : 1206 × 2622. Apple n’exige que le grand écran ; l’écran moyen reprend ensuite les mêmes images.</p>
+<button id="save" type="button" data-size="6.9">Enregistrer les 6 en 6,9" (grand écran)</button>
+<p></p>
+<button id="save63" type="button" data-size="6.3">Enregistrer les 6 en 6,3" (écran moyen)</button>
 <p id="msg"></p>
 <p>Sinon : appui long sur chaque image › « Ajouter à Photos ». Ordre conseillé : de 1 à 6.</p>
 <div class="grid">
@@ -25,19 +28,24 @@
 </div>
 </main>
 <script>
-const btn=document.getElementById('save'),msg=document.getElementById('msg');
+const msg=document.getElementById('msg');
 // Préparé à l’avance : Safari n’ouvre le partage que juste après le toucher.
-let files=null;
-Promise.all([1,2,3,4,5,6].map(async n=>{
-  const name='adjuge-6.9-'+n+'.jpg';
-  const blob=await (await fetch(name)).blob();
-  return new File([blob],name,{type:'image/jpeg'});
-})).then(f=>{files=f}).catch(()=>{});
-btn.addEventListener('click',()=>{
-  if(!files){msg.textContent='Chargement des images, réessaie dans une seconde.';return}
-  if(!navigator.canShare||!navigator.canShare({files})){msg.textContent='Ton navigateur ne permet pas l’enregistrement groupé : appui long sur chaque image.';return}
-  msg.textContent='';
-  navigator.share({files}).catch(e=>{if(e.name!=='AbortError')msg.textContent='Échec : appui long sur chaque image.'});
-});
+const files={};
+for(const size of ['6.9','6.3']){
+  Promise.all([1,2,3,4,5,6].map(async n=>{
+    const name='adjuge-'+size+'-'+n+'.jpg';
+    const blob=await (await fetch(name)).blob();
+    return new File([blob],name,{type:'image/jpeg'});
+  })).then(f=>{files[size]=f}).catch(()=>{});
+}
+for(const btn of document.querySelectorAll('button[data-size]')){
+  btn.addEventListener('click',()=>{
+    const f=files[btn.dataset.size];
+    if(!f){msg.textContent='Chargement des images, réessaie dans une seconde.';return}
+    if(!navigator.canShare||!navigator.canShare({files:f})){msg.textContent='Ton navigateur ne permet pas l’enregistrement groupé : appui long sur chaque image.';return}
+    msg.textContent='';
+    navigator.share({files:f}).catch(e=>{if(e.name!=='AbortError')msg.textContent='Échec : appui long sur chaque image.'});
+  });
+}
 </script>
 </body></html>
