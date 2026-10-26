@@ -26,18 +26,18 @@
 </main>
 <script>
 const btn=document.getElementById('save'),msg=document.getElementById('msg');
-btn.addEventListener('click',async()=>{
-  try{
-    msg.textContent='Préparation…';
-    const files=await Promise.all([1,2,3,4,5,6].map(async n=>{
-      const name='adjuge-6.9-'+n+'.jpg';
-      const blob=await (await fetch(name)).blob();
-      return new File([blob],name,{type:'image/jpeg'});
-    }));
-    if(!navigator.canShare||!navigator.canShare({files})){msg.textContent='Ton navigateur ne permet pas l’enregistrement groupé : appui long sur chaque image.';return}
-    msg.textContent='';
-    await navigator.share({files});
-  }catch(e){ if(e.name!=='AbortError') msg.textContent='Échec : appui long sur chaque image.'; else msg.textContent=''; }
+// Préparé à l’avance : Safari n’ouvre le partage que juste après le toucher.
+let files=null;
+Promise.all([1,2,3,4,5,6].map(async n=>{
+  const name='adjuge-6.9-'+n+'.jpg';
+  const blob=await (await fetch(name)).blob();
+  return new File([blob],name,{type:'image/jpeg'});
+})).then(f=>{files=f}).catch(()=>{});
+btn.addEventListener('click',()=>{
+  if(!files){msg.textContent='Chargement des images, réessaie dans une seconde.';return}
+  if(!navigator.canShare||!navigator.canShare({files})){msg.textContent='Ton navigateur ne permet pas l’enregistrement groupé : appui long sur chaque image.';return}
+  msg.textContent='';
+  navigator.share({files}).catch(e=>{if(e.name!=='AbortError')msg.textContent='Échec : appui long sur chaque image.'});
 });
 </script>
 </body></html>
