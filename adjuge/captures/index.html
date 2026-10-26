@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Adjugé ! · Captures App Store</title>
+<link rel="stylesheet" href="../../style.css"><link rel="stylesheet" href="../adjuge.css">
+<style>
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:16px 0}
+.grid img{width:100%;border-radius:10px;display:block}
+.grid figure{margin:0}.grid figcaption{font-size:13px;opacity:.8;margin-top:4px;text-align:center}
+#save{width:100%;padding:16px;font:inherit;font-weight:800;font-size:18px;border:0;border-radius:14px;background:#E3B04B;color:#10261E;cursor:pointer}
+#msg{min-height:1.4em;margin-top:8px}
+</style></head>
+<body><main>
+<h1>Captures App Store<br><span>iPhone 6,9" · 1320 × 2868</span></h1>
+<button id="save" type="button">Enregistrer les 6 dans Photos</button>
+<p id="msg"></p>
+<p>Sinon : appui long sur chaque image › « Ajouter à Photos ». Ordre conseillé : de 1 à 6.</p>
+<div class="grid">
+<figure><img src="adjuge-6.9-1.jpg" alt="Capture 1 : Crie ta mise"><figcaption>1</figcaption></figure>
+<figure><img src="adjuge-6.9-2.jpg" alt="Capture 2 : Adjugé !"><figcaption>2</figcaption></figure>
+<figure><img src="adjuge-6.9-3.jpg" alt="Capture 3 : Défends tes choix"><figcaption>3</figcaption></figure>
+<figure><img src="adjuge-6.9-4.jpg" alt="Capture 4 : Vote secret"><figcaption>4</figcaption></figure>
+<figure><img src="adjuge-6.9-5.jpg" alt="Capture 5 : Un seul gagnant"><figcaption>5</figcaption></figure>
+<figure><img src="adjuge-6.9-6.jpg" alt="Capture 6 : De 2 à 10 joueurs"><figcaption>6</figcaption></figure>
+</div>
+</main>
+<script>
+const btn=document.getElementById('save'),msg=document.getElementById('msg');
+// Préparé à l’avance : Safari n’ouvre le partage que juste après le toucher.
+let files=null;
+Promise.all([1,2,3,4,5,6].map(async n=>{
+  const name='adjuge-6.9-'+n+'.jpg';
+  const blob=await (await fetch(name)).blob();
+  return new File([blob],name,{type:'image/jpeg'});
+})).then(f=>{files=f}).catch(()=>{});
+btn.addEventListener('click',()=>{
+  if(!files){msg.textContent='Chargement des images, réessaie dans une seconde.';return}
+  if(!navigator.canShare||!navigator.canShare({files})){msg.textContent='Ton navigateur ne permet pas l’enregistrement groupé : appui long sur chaque image.';return}
+  msg.textContent='';
+  navigator.share({files}).catch(e=>{if(e.name!=='AbortError')msg.textContent='Échec : appui long sur chaque image.'});
+});
+</script>
+</body></html>
