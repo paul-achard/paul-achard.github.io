@@ -1,0 +1,4 @@
+/* Couleurs « Herbier en pot » de Bouture par-dessus le style commun. */
+:root{--night:#1E3A2C;--paper:#FBFBF7;--ink:#1E3A2C;--muted:#CFE0C8;--coral:#B4472A;--sun:#E08A6E;--mint:#A9CBEA}
+.card a{color:#B4472A}
+.pill{background:var(--sun)}
