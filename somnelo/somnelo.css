@@ -1,0 +1,5 @@
+/* Couleurs « Ciel de chambre » de Somnelo par-dessus le style commun. */
+:root{--night:#152238;--paper:#EEF2F7;--ink:#22324A;--muted:#B4C0D4;--coral:#C9D3E6;--sun:#F4A259;--mint:#F4A259}
+.card a{color:#A4511A}
+.pill{background:var(--sun)}
+.card{box-shadow:8px 8px 0 #7D8BA6}
